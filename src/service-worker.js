@@ -1,42 +1,38 @@
-import { workbox } from 'workbox';
+import { precacheAndRoute } from "workbox-precaching"; // Import precacheAndRoute from workbox-precaching
+import { registerRoute } from "workbox-routing"; // Import registerRoute from workbox-routing
+import { CacheFirst, NetworkFirst } from "workbox-strategies"; // Import caching strategies from workbox-strategies
+import { ExpirationPlugin } from "workbox-expiration"; // Import ExpirationPlugin from workbox-expiration
+import { cleanupOutdatedCaches } from "workbox-precaching"; // Import cleanupOutdatedCaches from workbox-precaching
 
-workbox.core.setCacheName('my-chat-app');
+// Configure cache name prefix for Workbox cache
+/* eslint-disable no-restricted-globals */
+precacheAndRoute(self.__WB_MANIFEST);
+/* eslint-enable no-restricted-globals */
 
-workbox.routing.registerRoute(
-  /\.(?:js|css|json|svg|png|jpg|gif)$/,
-  new workbox.strategies.CacheFirst({
-    cacheName: 'assets',
-    plugins: [
-      new workbox.expiration.Plugin({
-        maxEntries: 60,
-        maxAgeInDays: 30,
-      }),
-    ],
-  })
-);
-
-workbox.routing.registerRoute(
-  /^https:\/\/qa.corider.in\/assignment\/chat/, // Adjust for your API endpoint
-  new workbox.strategies.NetworkFirst({
-    cacheName: 'chat-data',
-  })
-);
-
-workbox.precaching.precacheAndRoute([]); // Adjust precaching if needed
-
-workbox.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== workbox.core.getCacheName()) {
-            return caches.delete(key);
-          }
-        })
-      );
+// Register caching strategies for different types of requests
+registerRoute(
+    /\.(?:js|css|json|svg|png|jpg|gif)$/,
+    new CacheFirst({
+        cacheName: "assets",
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 60,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+            }),
+        ],
     })
-  );
-});
+);
 
-// Register the service worker (optional, see step 4)
-// workbox.window.register(); 
+registerRoute(
+    /^https:\/\/qa.corider.in\/assignment\/chat/,
+    new NetworkFirst({
+        cacheName: "chat-data",
+    })
+);
+
+// Cleanup outdated caches
+/* eslint-disable no-restricted-globals */
+self.addEventListener("activate", (event) => {
+    event.waitUntil(cleanupOutdatedCaches());
+});
+/* eslint-enable no-restricted-globals */
