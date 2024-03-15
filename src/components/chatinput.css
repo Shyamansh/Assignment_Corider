@@ -1,0 +1,54 @@
+.chat-input-container {
+    display: flex; /* Maintain flexbox for layout */
+    justify-content: center; /* Center the form horizontally */   
+    margin-left: 2px;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #f5f5f5;
+    padding: 1rem 1.5rem;
+}
+
+.chat-input-container form {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.chat-input-field {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.chat-input-button {
+    flex: 0 0 auto;
+    margin-left: 1rem;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.chat-input-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.chat-input-button {
+    width: 80px;
+    flex: 0 0 auto;
+    margin-left: 1rem;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.chat-input-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
